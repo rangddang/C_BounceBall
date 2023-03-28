@@ -1,0 +1,303 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<Windows.h>
+#include<time.h>
+#include<conio.h>
+#include <stdlib.h>
+
+int key, sc = 0, ms,di = 0;
+int x = 0, y = 0;
+int sizex = 0, sizey = 0;
+int map[30][40];
+int jump = 0;
+int level = 1, re = 0;
+
+main() {
+	srand(time(NULL));
+	while (1) {
+		map_save();
+		while (1) {
+			Sleep(70);
+			clss();
+			map[y][x] = 0;
+			jumpa();
+			keya();
+			if (map[y][x] == 3) {
+				sc++;
+			}
+			if (ms == sc) {
+				level++;
+				re = 1;
+			}
+			if (map[y][x] == 4) {
+				map[y][x] = 6;
+				re = 1;
+			}
+			map[y][x] = 1;
+			printf("Level : %d di = %d\n", level, di);
+			mapa();
+			if (re == 1) {
+				re = 0;
+				sc = 0;
+				Sleep(1000);
+				break;
+			}
+		}
+	}
+	return 0;
+}
+
+int keya()
+{
+	di = 0;
+	if (_kbhit()) {
+		key = _getch();
+		if (key == 224 || key == 0) {
+			key = _getch();
+			switch (key) {
+				break;
+			case 75:
+				di = 1;
+				/*if (map[y][x - 1] != 5 && map[y][x - 1] != 2 && (x - 1) >= 0) {
+					x--;
+				}*/
+				break;
+			case 77:
+				di = 2;
+				/*if (map[y][x + 1] != 5 && map[y][x + 1] != 2 && (x + 2) <= sizex) {
+					x++;
+				}*/
+				break;
+			default:
+				//di = 0;
+				break;
+			}
+		}
+	}
+	else {
+		di = 0;
+	}
+	if (di == 1) {
+		if (map[y][x - 1] != 5 && map[y][x - 1] != 2 && (x - 1) >= 0) {
+			x--;
+		}
+	}
+	if (di == 2) {
+		if (map[y][x + 1] != 5 && map[y][x + 1] != 2 && (x + 2) <= sizex) {
+			x++;
+		}
+	}
+}
+
+int clss()
+{
+	COORD pos = { 0, 0 };
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+
+int mapa()
+{
+	int i, j;
+	for (i = 0; i < sizey; i++) {
+		for (j = 0; j < sizex; j++) {
+			if (map[i][j] == 0) {
+				printf("  ");
+			}
+			else if (map[i][j] == 1) {
+				printf("●");
+			}
+			else if (map[i][j] == 2) {
+				printf("■");
+			}
+			else if (map[i][j] == 3) {
+				printf("★");
+			}
+			else if (map[i][j] == 4) {
+				printf("△");
+			}
+			else if (map[i][j] == 5) {
+				printf("▦");
+			}
+			else if (map[i][j] == 6) {
+				printf("※");
+			}
+		}
+		printf("\n");
+	}
+}
+
+int jumpa()
+{
+	if (map[y + 1][x] == 2) {
+		jump = 2;
+	}
+	else if (map[y + 1][x] == 5) {
+		jump = 2;
+		map[y + 1][x] = 0;
+	}
+	if (map[y - 1][x] == 2 || map[y - 1][x] == 5) {
+		jump = 0;
+	}
+
+	if (jump > 0) {
+		y--;
+		jump--;
+	}
+	else {
+		y++;
+	}
+	if (y > sizey) {
+		re = 1;
+	}
+}
+
+int map_save()
+{
+	int i, j;
+	if (level == 1) {
+		sizex = 20, sizey = 30;
+		for (i = 0; i < sizey; i++) {
+			for (j = 0; j < sizex; j++) {
+				if (i == 29) {
+					map[i][j] = 2;
+				}
+				else {
+					map[i][j] = 0;
+				}
+				if (i == 27 && j == 18) {
+					map[i][j] = 3;
+				}
+			}
+		}
+		ms = 1;
+		x = 1;
+		y = 25;
+		system("mode con cols=40 lines=30");
+	}
+	else if (level == 2) {
+		sizex = 40, sizey = 30;
+		for (i = 0; i < sizey; i++) {
+			for (j = 0; j < sizex; j++) {
+				if (i == 29) {
+					if (j % 4 == 0) {
+						map[i][j] = 0;
+					}
+					else {
+						map[i][j] = 2;
+					}
+				}
+				else {
+					map[i][j] = 0;
+				}
+				if (i == 27 && j == 38) {
+					map[i][j] = 3;
+				}
+			}
+		}
+		ms = 1;
+		x = 1;
+		y = 25;
+		system("mode con cols=80 lines=30");
+	}
+	else if (level == 3) {
+		sizex = 40, sizey = 30;
+		for (i = 0; i < sizey; i++) {
+			for (j = 0; j < sizex; j++) {
+				if (i == 29) {
+					if (j % 2 != 0) {
+						map[i][j] = 0;
+					}
+					else {
+						map[i][j] = 2;
+					}
+				}
+				else {
+					map[i][j] = 0;
+				}
+				if (i == 27 && j == 38) {
+					map[i][j] = 3;
+				}
+			}
+		}
+		ms = 1;
+		x = 0;
+		y = 25;
+		system("mode con cols=80 lines=30");
+	}
+	else if (level == 4) {
+		sizex = 40, sizey = 30;
+		for (i = 0; i < sizey; i++) {
+			for (j = 0; j < sizex; j++) {
+				if (i == 29) {
+					if (j % 3 != 0) {
+						map[i][j] = 0;
+					}
+					else {
+						map[i][j] = 2;
+					}
+				}
+				else {
+					map[i][j] = 0;
+				}
+				if (i == 27 && j == 39) {
+					map[i][j] = 3;
+				}
+			}
+		}
+		ms = 1;
+		x = 0;
+		y = 25;
+		system("mode con cols=80 lines=30");
+	}
+	else if (level == 5) {
+		sizex = 40, sizey = 30;
+		for (i = 0; i < sizey; i++) {
+			for (j = 0; j < sizex; j++) {
+				if (i == 29) {
+					if (j % 4 != 0) {
+						map[i][j] = 0;
+					}
+					else {
+						map[i][j] = 2;
+					}
+				}
+				else {
+					map[i][j] = 0;
+				}
+				if (i == 27 && j == 36) {
+					map[i][j] = 3;
+				}
+			}
+		}
+		ms = 1;
+		x = 0;
+		y = 25;
+		system("mode con cols=80 lines=30");
+	}
+	else if (level == 6) {
+	sizex = 40, sizey = 30;
+	for (i = 0; i < sizey; i++) {
+		for (j = 0; j < sizex; j++) {
+			if (i == 29) {
+				if (j % 3 != 0) {
+					map[i][j] = 0;
+				}
+				else {
+					map[i][j] = 5;
+				}
+			}
+			else {
+				map[i][j] = 0;
+			}
+			if (i == 27 && j == 39) {
+				map[i][j] = 3;
+			}
+		}
+	}
+	ms = 1;
+	x = 0;
+	y = 25;
+	system("mode con cols=80 lines=30");
+	}
+}
+
